@@ -27,6 +27,12 @@
       "@routes/*": [
         "app/routes/*"
       ],
+      "@config/*": [
+        "app/config/*"
+      ],
+      "@db/*": [
+        "app/db/*"
+      ],
       "@services/*": [
         "app/service/*"
       ]

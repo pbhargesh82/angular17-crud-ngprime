@@ -10,3 +10,8 @@
     @tailwind components;
     @tailwind utilities;
 }
+
+button {
+    color: initial;
+    color: inherit !important;
+}
