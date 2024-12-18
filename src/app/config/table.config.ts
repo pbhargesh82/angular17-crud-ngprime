@@ -1,6 +1,6 @@
 export const peopleTableConfig = {
     columns: [
-        { field: 'person', header: 'Person', width: '250px' },
+        { field: 'fullName', header: 'Person', width: '250px' },
         { field: 'email', header: 'Email' },
         { field: 'bio', header: 'Bio' },
         { field: 'sexType', header: 'Sex Type' },

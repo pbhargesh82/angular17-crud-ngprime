@@ -20,4 +20,4 @@ export const generatePeopleData = (count: number): Person[] =>
         };
     });
 
-export const generatedData = generatePeopleData(10);
+export const generatedData = generatePeopleData(100);

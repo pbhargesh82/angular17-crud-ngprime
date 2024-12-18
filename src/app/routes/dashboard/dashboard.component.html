@@ -1,21 +1,29 @@
-<div class="p-8">
+<div class="h-screen w-full overflow-auto">
     <p-table #dataTable [value]="people" [tableStyle]="{'width': '100%'}" styleClass="p-datatable-striped"
-        [globalFilterFields]="['firstName', 'lastName']">
-        <!-- <ng-template pTemplate="caption">
-            <div class="d-flex justify-content-end">
+        [globalFilterFields]="['firstName', 'lastName']" [paginator]="true" [rows]="20"
+        [rowsPerPageOptions]="[20, 40, 50]" [showCurrentPageReport]="true" [scrollable]="true" scrollHeight="flex"
+        currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+        <ng-template pTemplate="caption">
+            <div class="flex items-center justify-between">
                 <span class="p-input-icon-left">
                     <i class="pi pi-search"></i>
                     <input pInputText type="text" [(ngModel)]="searchValue" (input)="onGlobalFilter(dataTable, $event)"
                         class="w-full pl-8 border rounded-md text-black dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800"
-                        placeholder="Search keyword" />
+                        placeholder="Search" />
                 </span>
+                <button pButton pRipple label="Add User" class="p-button-success font-bold"
+                    (click)="addRecord()"></button>
             </div>
-        </ng-template> -->
+        </ng-template>
         <ng-template pTemplate="header">
             <tr>
                 @for (item of tableConfig.columns; track $index) {
-                <th class="text-center" [ngStyle]="item?.width ? { 'min-width': item.width } : {'min-width': '150px'}">
+                <th class="text-center" [ngStyle]="item?.width ? { 'min-width': item.width } : {'min-width': '150px'}"
+                    [pSortableColumn]="item.field">
                     {{ item.header }}
+                    <p-sortIcon [field]="item.field" />
+                    <p-columnFilter type="text" [field]="item.field" [placeholder]="item.header" display="menu"
+                        matchMode="contains" />
                 </th>
                 }
             </tr>
@@ -25,7 +33,7 @@
                 @for (item of tableConfig.columns; track $index) {
                 @if (item.field === "action") {
                 <td>
-                    <div class="d-flex gap-2">
+                    <div class="w-fit mx-auto my-0 d-flex gap-2">
                         @for (item of person.action; track $index) {
                         <p-button [icon]="item.iconClass" [rounded]="true" [text]="true" [pTooltip]="item.tooltip"
                             tooltipPosition="bottom" [class]="item.styleClass"
@@ -33,13 +41,11 @@
                         }
                     </div>
                 </td>
-                } @else if (item.field === "person") {
+                } @else if (item.field === "fullName") {
                 <td>
                     <div class="flex items-center gap-4">
-                        <p-avatar [image]="person?.avatar" class="mr-2" size="xlarge" shape="circle" />
-                        <span class="flex items-center gap-2">
-                            {{ person?.firstName }} {{ person?.middleName}} {{ person?.lastName }}
-                        </span>
+                        <p-avatar [image]="person?.avatar" class="flex" size="normal" shape="circle" />
+                        <span class="flex items-center gap-2"> {{person[item.field]}} </span>
                     </div>
                 </td>
                 } @else {
@@ -50,7 +56,5 @@
         </ng-template>
     </p-table>
 </div>
-
-<button (click)="addRecord()">Add User</button>
 
 <p-toast />

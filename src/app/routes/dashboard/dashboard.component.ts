@@ -36,32 +36,37 @@ export class DashboardComponent {
   }
 
   initializeDatabase() {
-    this.dbService.clear(storeName).subscribe((successDeleted) => {
-      console.log('success? ', successDeleted);
+    this.dbService.count(storeName).subscribe((recordCount) => {
+      if (recordCount > 0) {
+        console.log('Database already initialized.');
+        this.getUsers(); // Fetch the existing users
+      } else {
+        console.log('Initializing database with sample data...');
+        this.dbService.bulkAdd(storeName, generatedData).subscribe({
+          next: () => {
+            console.log('Sample data added to database.');
+            this.getUsers(); // Fetch the newly added users
+          },
+          error: (err) => {
+            console.error('Error initializing database:', err);
+          }
+        });
+      }
     });
-
-    this.dbService.bulkAdd(storeName, generatedData);
-    // .subscribe({
-    //   next: (result) => {
-    //     console.log('result: ', result);
-    //   },
-    //   error: (err: any) => {
-    //     console.log(err);
-    //   }
-    // });
-
-    this.getUsers();
   }
+
 
   getUsers() {
     this.dbService.getAll(storeName).subscribe((result: any) => {
       this.people = result;
       this.people.forEach((person: any) => {
+        person.fullName = `${person.firstName} ${person.middleName} ${person.lastName}`;
         person.action = [
           { action: 'edit', iconClass: 'pi pi-pencil', tooltip: 'Edit', styleClass: 'text-blue-500' },
           { action: 'delete', iconClass: 'pi pi-trash', tooltip: 'Delete', styleClass: 'text-red-500' },
         ];
       });
+      this.people = [...this.people.reverse()];
       console.log('result: ', this.people);
     });
   }
