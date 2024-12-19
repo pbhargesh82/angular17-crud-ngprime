@@ -14,7 +14,7 @@ export const generatePeopleData = (count: number): Person[] =>
             phone: faker.phone.number({ style: 'international' }),
             birthdate: faker.date.birthdate({ mode: 'age', min: 18, max: 65 }),
             bio: faker.person.bio(),
-            sexType: faker.person.sexType(),
+            gender: faker.person.sexType(),
             company: faker.company.name(),
             // jobTitle: faker.person.jobTitle(),
             jobType: faker.person.jobType(),

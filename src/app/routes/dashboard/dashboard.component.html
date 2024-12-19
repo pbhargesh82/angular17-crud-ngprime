@@ -1,66 +1,156 @@
-<div class="h-screen w-full overflow-auto">
-	<p-table #dataTable [value]="people" [tableStyle]="{'width': '100%'}" styleClass="p-datatable-striped"
-		[globalFilterFields]="['firstName', 'middleName', 'lastName']" [paginator]="true" [rows]="20"
-		[rowsPerPageOptions]="[20, 40, 50]" [showCurrentPageReport]="true" [scrollable]="true" scrollHeight="flex"
-		currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
-		<ng-template pTemplate="caption">
-			<div class="flex items-center justify-between">
-				<span class="p-input-icon-left">
-					<i class="pi pi-search"></i>
-					<input pInputText type="text" [(ngModel)]="searchValue" (input)="onGlobalFilter(dataTable, $event)"
-						class="w-full pl-8 leading-8 border rounded-md text-black dark:border-gray-300 dark:bg-gray-50 dark:text-gray-800"
-						placeholder="Search" />
-				</span>
-				<button pButton pRipple label="Add User" class="p-button-success font-bold" (click)="addRecord()"></button>
-			</div>
-		</ng-template>
-		<ng-template pTemplate="header">
-			<tr>
-				@for (item of tableConfig.columns; track $index) {
-				<th class="text-center" [ngStyle]="item?.width ? { 'min-width': item.width } : {'min-width': '170px'}"
-					[pSortableColumn]="item.field">
-					{{ item.header }}
-					<p-sortIcon [field]="item.field" />
-					<p-columnFilter type="text" [field]="item.field" [placeholder]="item.header" display="menu"
-						matchMode="contains" />
-				</th>
-				}
-			</tr>
-		</ng-template>
-		<ng-template pTemplate="body" let-person>
-			<tr>
-				@for (item of tableConfig.columns; track $index) {
-				@if (item.field === "action") {
-				<td>
-					<div class="w-fit mx-auto my-0 d-flex gap-2">
-						@for (item of person.action; track $index) {
-						<p-button [icon]="item.iconClass" [rounded]="true" [text]="true" [pTooltip]="item.tooltip"
-							tooltipPosition="bottom" [class]="item.styleClass" class="action-button"
-							(click)="onActionClick(person, item.action)" />
+<div class="h-screen w-full flex flex-col">
+	<div class="flex-1 overflow-auto">
+		<p-table #dataTable [value]="people" [tableStyle]="{'width': '100%'}" styleClass="p-datatable-striped"
+			[globalFilterFields]="globalSearchFields" [paginator]="true" [rows]="20" [rowsPerPageOptions]="[20, 40, 50]"
+			[showCurrentPageReport]="true" [scrollable]="true" scrollHeight="flex"
+			currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries">
+			<ng-template pTemplate="caption">
+				<div class="flex items-center justify-between">
+					<span class="p-input-icon-left">
+						<i class="pi pi-search"></i>
+						<input pInputText type="text" [(ngModel)]="searchValue" (input)="onGlobalFilter(dataTable, $event)"
+							class="w-full pl-8 leading-8 border rounded-md text-black" placeholder="Search" />
+					</span>
+					<button pButton pRipple label="Add User" class="p-button-success font-bold" (click)="addRecord()"></button>
+				</div>
+			</ng-template>
+			<ng-template pTemplate="header">
+				<tr>
+					@for (item of tableConfig.columns; track $index) {
+					<th class="text-center" [ngStyle]="item?.width ? { 'min-width': item.width } : {'min-width': '170px'}"
+						[pSortableColumn]="item.field">
+						{{ item.header }}
+						@if(item.sort) {
+						<p-sortIcon [field]="item.field" />
 						}
-					</div>
-				</td>
-				} @else if (item.field === "fullName") {
-				<td>
-					<div class="flex items-center gap-4">
-						<p-avatar [image]="person?.avatar" class="flex" size="normal" shape="circle" />
-						<span class="flex items-center gap-2"> {{person[item.field]}} </span>
-					</div>
-				</td>
-				} @else if (item.field === "status") {
-				<td>
-					<p-tag [value]="person[item.field] | capitalize"
-						[severity]="person[item.field] === 'active' ? 'success': person[item.field] === 'inactive' ? 'danger' : undefined ">
-					</p-tag>
-				</td>
-				} @else {
-				<td>{{ person[item.field] | capitalize}}</td>
-				}
-				}
-			</tr>
-		</ng-template>
-	</p-table>
+						@if(item.filter) {
+						<p-columnFilter type="text" [field]="item.field" [placeholder]="item.header" display="menu"
+							matchMode="contains" />
+						}
+					</th>
+					}
+				</tr>
+			</ng-template>
+			<ng-template pTemplate="body" let-person>
+				<tr>
+					@for (item of tableConfig.columns; track $index) {
+					@if (item.field === "action") {
+					<td>
+						<div class="w-fit mx-auto my-0 d-flex gap-2">
+							@for (item of person.action; track $index) {
+							<p-button [icon]="item.iconClass" [rounded]="true" [text]="true" [pTooltip]="item.tooltip"
+								tooltipPosition="bottom" [class]="item.styleClass" class="action-button"
+								(click)="onActionClick(person, item.action)" />
+							}
+						</div>
+					</td>
+					} @else if (item.field === "fullName") {
+					<td>
+						<div class="flex items-center gap-4">
+							<p-avatar [image]="person?.avatar" class="flex" size="normal" shape="circle" />
+							<span class="flex items-center gap-2"> {{person[item.field]}} </span>
+						</div>
+					</td>
+					} @else if (item.field === "status") {
+					<td>
+						<p-tag [value]="person[item.field] | capitalize"
+							[severity]="person[item.field] === 'active' ? 'success': person[item.field] === 'inactive' ? 'danger' : undefined ">
+						</p-tag>
+					</td>
+					} @else {
+					<td>{{ person[item.field] | capitalize}}</td>
+					}
+					}
+				</tr>
+			</ng-template>
+		</p-table>
+	</div>
+	<footer>
+		<div class="bg-slate-800 h-8 text-lg text-center text-gray-100"> Made with <span class="animate-pulse">❤️</span> by
+			<a target="_blank" href="https://pbhargesh82.netlify.app/home"
+				class="font-bold underline underline-offset-4">Bhargesh Patel</a>
+		</div>
+	</footer>
 </div>
+
+<p-dialog [header]="isEdit ? 'Edit Person' : 'Add Person'" [modal]="true" [(visible)]="showDialog"
+	[style]="{ width: '50%' }">
+	<form [formGroup]="personFrom">
+		<div class="flex flex-col gap-4">
+			<div class="grid grid-cols-3 gap-4">
+				<div class="flex flex-col gap-2">
+					<label for="firstName" class="font-semibold w-6rem">First Name <span class="text-red-500">*</span></label>
+					<input pInputText id="firstName" class="w-full pl-2 leading-8 border rounded-md text-black" autocomplete="off"
+						formControlName="firstName" />
+				</div>
+				<div class="flex flex-col gap-2">
+					<label for="middleName" class="font-semibold w-6rem">Middle Name</label>
+					<input pInputText id="middleName" class="w-full pl-2 leading-8 border rounded-md text-black"
+						autocomplete="off" formControlName="middleName" />
+				</div>
+				<div class="flex flex-col gap-2">
+					<label for="lastName" class="font-semibold w-6rem">Last Name <span class="text-red-500">*</span></label>
+					<input pInputText id="lastName" class="w-full pl-2 leading-8 border rounded-md text-black" autocomplete="off"
+						formControlName="lastName" />
+				</div>
+			</div>
+			<div class="flex flex-col gap-4">
+				<div class="grid grid-cols-3 gap-4">
+					<div class="flex flex-col gap-2">
+						<label for="email" class="font-semibold w-6rem">Email <span class="text-red-500">*</span></label>
+						<input pInputText id="email" class="w-full pl-2 leading-8 border rounded-md text-black" autocomplete="off"
+							formControlName="email" />
+					</div>
+					<div class="flex flex-col gap-2">
+						<label for="gender" class="font-semibold w-6rem">Gender <span class="text-red-500">*</span></label>
+						<input pInputText id="gender" class="w-full pl-2 leading-8 border rounded-md text-black" autocomplete="off"
+							formControlName="gender" />
+					</div>
+					<div class="flex flex-col gap-2">
+						<label for="phone" class="font-semibold w-6rem">Phone</label>
+						<input pInputText id="phone" class="w-full pl-2 leading-8 border rounded-md text-black" autocomplete="off"
+							formControlName="phone" />
+					</div>
+				</div>
+				<div class="grid grid-cols-3 gap-4">
+					<div class="flex flex-col gap-2">
+						<label for="birthdate" class="font-semibold w-6rem">Birthdate</label>
+						<input pInputText id="birthdate" class="w-full pl-2 leading-8 border rounded-md text-black"
+							autocomplete="off" formControlName="birthdate" />
+					</div>
+					<div class="flex flex-col gap-2">
+						<label for="bio" class="font-semibold w-6rem">Bio</label>
+						<input pInputText id="bio" class="w-full pl-2 leading-8 border rounded-md text-black" autocomplete="off"
+							formControlName="bio" />
+					</div>
+				</div>
+			</div>
+			<div class="grid grid-cols-3 gap-4">
+				<div class="flex flex-col gap-2">
+					<label for="company" class="font-semibold w-6rem">Company</label>
+					<input pInputText id="company" class="w-full pl-2 leading-8 border rounded-md text-black" autocomplete="off"
+						formControlName="company" />
+				</div>
+				<div class="flex flex-col gap-2">
+					<label for="jobType" class="font-semibold w-6rem">Job</label>
+					<input pInputText id="jobType" class="w-full pl-2 leading-8 border rounded-md text-black" autocomplete="off"
+						formControlName="jobType" />
+				</div>
+				<div class="flex flex-col gap-2">
+					<label for="status" class="font-semibold w-6rem">Status <span class="text-red-500">*</span></label>
+					<input pInputText id="status" class="w-full pl-2 leading-8 border rounded-md text-black" autocomplete="off"
+						formControlName="status" />
+				</div>
+			</div>
+			<div class="border-t-2 pt-4 flex gap-2 justify-end">
+				<p-button label="Cancel" severity="secondary" (onClick)="showDialog = false" />
+				<p-button label="Save" (onClick)="showDialog = false" />
+			</div>
+		</div>
+	</form>
+</p-dialog>
+
+
 
 <p-toast />
 <p-confirmDialog />

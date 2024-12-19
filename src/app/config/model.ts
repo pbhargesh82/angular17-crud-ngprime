@@ -1,3 +1,16 @@
+export interface TableConfig {
+    columns: Column[];
+}
+
+export interface Column {
+    field: string;
+    header: string;
+    filter: boolean;
+    sort: boolean;
+    globalFilter: boolean;
+    width?: string;
+}
+
 export interface Person {
     id?: number;
     firstName: string;
@@ -8,7 +21,7 @@ export interface Person {
     phone: string;
     birthdate: Date | string;
     bio: string;
-    sexType: string;
+    gender: string;
     // zodiacSign: string;
     company: string;
     // jobTitle: string;
