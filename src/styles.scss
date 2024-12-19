@@ -11,8 +11,8 @@
     @tailwind utilities;
 }
 
-button {
-    color: initial;
+.action-button button {
+    // color: initial;
     color: inherit !important;
 }
 

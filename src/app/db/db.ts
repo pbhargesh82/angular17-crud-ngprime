@@ -11,12 +11,15 @@ export const generatePeopleData = (count: number): Person[] =>
             middleName: faker.person.middleName(),
             lastName,
             email: faker.internet.email({ firstName, lastName }),
+            phone: faker.phone.number({ style: 'international' }),
+            birthdate: faker.date.birthdate({ mode: 'age', min: 18, max: 65 }),
             bio: faker.person.bio(),
             sexType: faker.person.sexType(),
-            zodiacSign: faker.person.zodiacSign(),
-            jobTitle: faker.person.jobTitle(),
+            company: faker.company.name(),
+            // jobTitle: faker.person.jobTitle(),
             jobType: faker.person.jobType(),
-            avatar: faker.image.avatar()
+            avatar: faker.image.avatar(),
+            status: faker.helpers.arrayElement(['active', 'inactive', 'pending']),
         };
     });
 
